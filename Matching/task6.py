@@ -69,7 +69,7 @@ def nsw(query_point: np.ndarray, all_documents: np.ndarray,
     queue = list(np.random.choice(edges, num_start_points, replace=False))
     visited_vertex = dict()
     
-    while len(queue) > 0:
+    while queue:
         point = queue.pop()
         if point in visited_vertex:
             control_queue(queue, visited_vertex, search_k, edges)
