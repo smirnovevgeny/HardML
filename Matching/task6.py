@@ -54,9 +54,9 @@ def create_sw_graph(
         
     return edges
 
-def control_queue(queue: list, visited_vertex: dict, search_k: int, edges: list):
+def control_queue(queue: list, visited_vertex: dict, search_k: int, all_vertex: list):
     if queue and len(visited_vertex) < search_k:
-        remainder = list(set(edges).difference(set(visited_vertex.keys())))
+        remainder = list(set(all_vertex).difference(set(visited_vertex.keys())))
         queue.append(np.random.choice(remainder, 1)[0])
 
 def nsw(query_point: np.ndarray, all_documents: np.ndarray, 
@@ -64,15 +64,15 @@ def nsw(query_point: np.ndarray, all_documents: np.ndarray,
         search_k: int = 10, num_start_points: int = 5,
         dist_f: Callable = distance) -> np.ndarray:
     
-    edges = list(range(all_documents.shape[0]))
+    all_vertex = list(range(all_documents.shape[0]))
     
-    queue = list(np.random.choice(edges, num_start_points, replace=False))
+    queue = list(np.random.choice(all_vertex, num_start_points, replace=False))
     visited_vertex = dict()
     
     while queue:
         point = queue.pop()
         if point in visited_vertex:
-            control_queue(queue, visited_vertex, search_k, edges)
+            control_queue(queue, visited_vertex, search_k, all_vertex)
             continue
         else:
             neighbours = []
@@ -85,7 +85,7 @@ def nsw(query_point: np.ndarray, all_documents: np.ndarray,
                 distances = [distances]
             visited_vertex.update(list(zip(neighbours, distances)))
             queue.extend(neighbours)
-        control_queue(queue, visited_vertex, search_k, edges)
+        control_queue(queue, visited_vertex, search_k, all_vertex)
         
     nearest = list(zip(*sorted(visited_vertex.items(), key=lambda x: x[1])))[0][:search_k]
     return nearest
