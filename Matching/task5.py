@@ -474,7 +474,6 @@ class Solution:
     def train(self, n_epochs: int):
         opt = torch.optim.SGD(self.model.parameters(), lr=self.train_lr)
         criterion = torch.nn.BCELoss()
-#         triplets_0, triplets_1 = self.sample_data_for_train_iter(self.glue_train_df, 0)
         
         ndcg = 0
         for epoch in range(n_epochs):
